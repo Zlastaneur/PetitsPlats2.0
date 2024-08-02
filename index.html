@@ -1,22 +1,77 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./src/css/output.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./src/css/output.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
     <title>Les Petits Plats</title>
-</head>
-<body>
-    <header>
-        <img src="" alt="">
-        <h1>Cherchez pami plus de 1500 recettes du quotidien, simples et délicieuses</h1>
+  </head>
+  <body>
+    <header
+      class="flex flex-col items-center bg-black/[.25] bg-[url('/assets/images/background_header.jpg')] bg-cover bg-[0%_60%] bg-no-repeat bg-blend-multiply"
+    >
+      <nav class="w-full p-12 pl-16">
+        <img
+          src="assets/images/Logo.png"
+          alt="Les Petits Plats"
+          class="max-w-60"
+        />
+      </nav>
 
+      <div class="w-2/4 pb-32 pt-32">
+        <h2
+          class="text-center font-anton text-[42px] uppercase leading-relaxed text-yellow"
+        >
+          Cherchez parmi plus de 1500 recettes<br />du quotidien, simples et
+          délicieuses
+        </h2>
+        <div class="relative mb-36 mt-8 w-full">
+          <input
+            class="font-manrope w-full rounded-lg p-6 pl-8"
+            type="text"
+            placeholder="Rechercher une recette, un ingrédient, ..."
+          />
+          <button class="absolute bottom-2.5 end-2.5 block">
+            <svg
+              width="51"
+              height="53"
+              viewBox="0 0 51 53"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                y="0.421875"
+                width="51"
+                height="52"
+                rx="10"
+                fill="#1B1B1B"
+              />
+              <circle cx="22" cy="22.4219" r="9.5" stroke="white" />
+              <line
+                x1="30.3536"
+                y1="31.0683"
+                x2="39.3536"
+                y2="40.0683"
+                stroke="white"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
     </header>
-    <section>
-
-    </section>
-    <section>
-
-    </section>
-</body>
+    <main>
+      <section>
+        <div></div>
+        <div></div>
+      </section>
+      <section></section>
+    </main>
+    <script src="src/js/script.js"></script>
+  </body>
 </html>

@@ -2,8 +2,16 @@
 module.exports = {
   content: ["./*.html"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        yellow: "#FFD15B",
+      },
+      fontFamily: {
+        'anton': ["Anton"],
+        'manrope': ["Manrope"],
+      },
+    },
   },
-  plugins: [],
+  plugins: ["prettier-plugin-tailwindcss"],
 }
 
