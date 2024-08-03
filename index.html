@@ -32,10 +32,10 @@
           délicieuses
         </h2>
         <div
-          class="text-grey relative mb-36 mt-8 w-full border-none focus:ring-0"
+          class="relative mb-36 mt-8 w-full border-none text-grey focus:ring-0"
         >
           <input
-            class="font-manrope w-full rounded-lg border-none p-6 pl-8 focus:ring-0"
+            class="w-full rounded-lg border-none p-6 pl-8 font-manrope focus:ring-0"
             type="text"
             placeholder="Rechercher une recette, un ingrédient, ..."
           />
@@ -69,7 +69,7 @@
     </header>
     <main class="bg-[#ededed]">
       <section class="flex flex-col px-[300px] py-6">
-        <div class="font-manrope flex flex-nowrap justify-between pb-5">
+        <div class="flex flex-nowrap justify-between pb-5 font-manrope">
           <div class="flex w-3/4">
             <!--first filter-->
             <div class="mr-14">
@@ -144,7 +144,7 @@
                 type="button"
                 v
               >
-                Ingrédients
+                Appareils
                 <svg
                   class="ms-3 h-2.5 w-2.5"
                   aria-hidden="true"
@@ -207,7 +207,7 @@
                 type="button"
                 v
               >
-                Ingrédients
+                Ustensiles
                 <svg
                   class="ms-3 h-2.5 w-2.5"
                   aria-hidden="true"
@@ -299,31 +299,34 @@
           </button>
         </div>
       </section>
-      <section class="grid grid-cols-3 gap-y-20 px-[300px] pb-36 pt-6">
-        <article
+      <section
+        class="cards_section grid grid-cols-3 gap-y-20 px-[300px] pb-36 pt-6"
+      >
+        <!--<article
           class="box-border h-[700px] w-[380px] cursor-default rounded-xl bg-white"
         >
-          <div
-            class="relative h-[250px] cursor-default rounded-t-xl bg-[url('/assets/recipes/Recette01.jpg')] bg-cover bg-center bg-no-repeat text-end"
-          >
+          <div class="relative h-[250px] cursor-default text-end">
+            <img
+              src="assets/recipes/${data.image}"
+              alt="Photo de ${data.name}"
+              class="h-full w-full rounded-t-xl object-cover"
+            />
             <p
-              class="font-manrope absolute right-6 top-6 w-20 rounded-xl bg-yellow py-[4px] text-center text-sm font-normal"
+              class="absolute right-6 top-6 w-20 rounded-xl bg-yellow py-[4px] text-center font-manrope text-sm font-normal"
             >
-              10min
+              ${data.time}min
             </p>
           </div>
-          <div class="box-border h-[450px] p-6 pt-8">
-            <h2 class="font-anton">Limonade de Coco</h2>
-            <div class="font-manrope py-6 text-sm">
-              <h3 class="text-grey mb-3">Recette</h3>
-              <p>
-                Mettre les glaçons à votre goût dans le blender, ajouter le
-                lait, la crème de coco, le jus de 2 citrons et le sucre. Mixer
-                jusqu'à avoir la consistence désirée.
-              </p>
+          <div class="box-border h-[450px] overflow-hidden p-6 pt-8">
+            <h2 class="max-h-[25px] font-anton">${data.name}</h2>
+            <div
+              class="max-h-[220px] overflow-hidden py-6 font-manrope text-sm"
+            >
+              <h3 class="mb-3 text-grey">Recette</h3>
+              <p class="line-clamp-4">${data.description}</p>
             </div>
-            <div class="font-manrope box-border text-sm">
-              <h3 class="text-grey mb-1 w-full">Ingrédients</h3>
+            <div class="box-border font-manrope text-sm">
+              <h3 class="mb-[5px] w-full text-grey">Ingrédients</h3>
               <div
                 class="flex h-[180px] w-full flex-col flex-wrap content-between"
               >
@@ -350,9 +353,11 @@
               </div>
             </div>
           </div>
-        </article>
+        </article>-->
       </section>
     </main>
-    <script src="src/js/script.js"></script>
+    <script type="module" src="src/js/data/recipes.js"></script>
+    <script type="module" src="src/js/pages/index.js"></script>
+    <script type="module" src="src/js/templates/card.js"></script>
   </body>
 </html>
