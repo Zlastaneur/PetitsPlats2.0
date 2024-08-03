@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         yellow: "#FFD15B",
+        grey: "#7A7A7A",
       },
       fontFamily: {
         'anton': ["Anton"],
