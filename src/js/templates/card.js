@@ -1,5 +1,4 @@
 export function createCard(data) {
-
   function generateIngredientsList(ingredients) {
     return ingredients.map(ingredient => `
         <ul class="my-2 h-[40px] w-[45%]">
@@ -21,7 +20,7 @@ export function createCard(data) {
               class="h-full w-full rounded-t-xl object-cover"
             />
             <p
-              class="absolute right-6 top-6 w-20 rounded-xl bg-yellow py-[4px] text-center font-manrope text-sm font-normal"
+              class="absolute right-6 top-6 w-[64px] rounded-xl bg-yellow py-[4px] text-center font-manrope text-sm font-normal"
             >
               ${data.time}min
             </p>
