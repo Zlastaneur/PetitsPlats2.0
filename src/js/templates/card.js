@@ -11,7 +11,7 @@ export function createCard(data) {
 
   const cardTemplate = `
         <article
-          class="box-border h-[700px] w-[380px] cursor-default rounded-xl bg-white"
+          class="box-border h-[700px] w-[380px] cursor-default rounded-xl bg-white animate-fadeIn"
         >
           <div class="relative h-[250px] cursor-default text-end">
             <img

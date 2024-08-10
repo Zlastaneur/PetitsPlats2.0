@@ -26,10 +26,15 @@ module.exports = {
           '0%': { maxHeight: '300px' },
           '100%': { maxHeight: '0' },
         },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
       animation: {
         expand: 'expand 0.5s ease-out forwards',
         collapse: 'collapse 0.5s ease-in forwards',
+        fadeIn: 'fadeIn 0.5s ease-in-out',
       },
     },
   },

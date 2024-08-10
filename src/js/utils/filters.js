@@ -17,34 +17,30 @@ const utensilSearchInput = document.getElementById('search-input_utensil')
 
 const filtersContainer = document.querySelector('.selected_filters')
 
-let ingredientFilterItems
-let applianceFilterItems
-let utensilFilterItems
-
 let isIngredientsOpen = false
 let isAppliancesOpen = false
 let isUtensilsOpen = false
 let activeFilters = []
 
 // ------------ Event listeners ------------------ //
-ingredientBtn.addEventListener('click', toggleIngredientsDropdown)
-ingredientSearchInput.addEventListener('input', filterIngredientsWithInput)
+ingredientBtn.addEventListener('click', () => {
+    isIngredientsOpen = toggleDropdownButton(isIngredientsOpen, ingredientDropdown, document.querySelector(".chevron_ingredient"))
+})
+applianceBtn.addEventListener('click', () => {
+    isAppliancesOpen = toggleDropdownButton(isAppliancesOpen, applianceDropdown, document.querySelector(".chevron_appliance"))
+})
+utensilBtn.addEventListener('click', () => {
+    isUtensilsOpen = toggleDropdownButton(isUtensilsOpen, utensilDropdown, document.querySelector(".chevron_utensil"))
+})
 
-applianceBtn.addEventListener('click', toggleAppliancesDropdown)
-applianceSearchInput.addEventListener('input', filterAppliancesWithInput)
-
-utensilBtn.addEventListener('click', toggleUtensilsDropdown)
-utensilSearchInput.addEventListener('input', filterUtensilsWithInput)
+ingredientSearchInput.addEventListener('input', () => handleFilterInput(ingredientSearchInput, ingredientDropdown))
+applianceSearchInput.addEventListener('input', () => handleFilterInput(applianceSearchInput, applianceDropdown))
+utensilSearchInput.addEventListener('input', () => handleFilterInput(utensilSearchInput, utensilDropdown))
 
 filtersContainer.addEventListener('click', deleteSelectedFilter)
 
 // ------------ Functions ------------------ //
 
-function createFiltersList() {
-    createIngredientsList()
-    createAppliancesList()
-    createUtensilsList()
-}
 
 function updateRecipesDisplay() {
     const container = document.querySelector(".cards_section")
@@ -69,203 +65,103 @@ function updateRecipeCount(recipesList) {
 }
 
 function deleteSelectedFilter(event) {
-    if (event.target.classList.contains('close_btn')) {
-        const button = event.target.parentElement
+    if (event.target.classList.contains('close_btn') || event.target.closest('.close_btn')) {
+        const button = event.target.closest('.selected_filter_btn')
         const filter = button.textContent.trim().toLowerCase()
+        const filterType = event.target.dataset.filterType
         activeFilters = activeFilters.filter(element => element !== filter)
         button.remove()
 
         updateRecipesDisplay()
-        createIngredientsList()
+        dispatchFilterCreation(filterType)
     }
 }
 
-// ------------Ingredients Filter------------------ //
+function toggleDropdownButton(isOpen, dropdownElement, chevronElement) {
+    isOpen = !isOpen
+    chevronElement.classList.toggle("rotate-180")
 
-function toggleIngredientsDropdown() {
-    isIngredientsOpen = !isIngredientsOpen
-    document.querySelector(".chevron_appliance").classList.toggle("rotate-180")
-
-    if (isIngredientsOpen) {
-        ingredientDropdown.classList.remove('hidden')
-        ingredientDropdown.classList.add('animate-expand')
-        ingredientDropdown.classList.remove('animate-collapse')
+    if (isOpen) {
+        dropdownElement.classList.remove('hidden')
+        dropdownElement.classList.add('animate-expand')
+        dropdownElement.classList.remove('animate-collapse')
     } else {
-        ingredientDropdown.classList.add('animate-collapse')
-        ingredientDropdown.classList.remove('animate-expand')
+        dropdownElement.classList.add('animate-collapse')
+        dropdownElement.classList.remove('animate-expand')
         setTimeout(() => {
-            ingredientDropdown.classList.add('hidden')
+            dropdownElement.classList.add('hidden')
         }, 505)
     }
+
+    return isOpen
 }
 
-function createIngredientsList() {
-    const ingredientContainer = document.querySelector('.ingredient_list')
-    const ingredients = recipesData.flatMap(recette => recette.ingredients.map(ing => ({ name: ing.ingredient })))
-    const uniqueIngredientsSet = new Set()
-    const uniqueIngredients = ingredients.reduce((acc, ingredient) => {
-        const ingredientNameLower = ingredient.name.toLowerCase()
-        if (!uniqueIngredientsSet.has(ingredientNameLower) && !activeFilters.includes(ingredientNameLower)) {
-            uniqueIngredientsSet.add(ingredientNameLower)
-            acc.push(ingredient)
-        }
-        return acc
-    }, [])
-
-    ingredientContainer.innerHTML = uniqueIngredients.map(ingredient => `<li class="block cursor-pointer py-2 px-4 hover:bg-yellow text-sm">${ingredient.name}</li>`).join("")
-    ingredientFilterItems = ingredientDropdown.querySelectorAll('li')
-    addIngredientsListeners()
-}
-
-function addIngredientsListeners() {
-    ingredientFilterItems.forEach(item => {
-        item.addEventListener("click", () => {
-            const clickedIngredient = item.textContent.trim().toLowerCase()
-            activeFilters.push(clickedIngredient)
-
-            createFilter(clickedIngredient)
-            updateRecipesDisplay()
-            createIngredientsList()
-        })
+function addListenersToFiltersList(filterList) {
+    filterList.forEach(item => {
+        item.addEventListener("click", handleFilterClick)
     })
 }
 
-function filterIngredientsWithInput() {
-    const searchTerm = ingredientSearchInput.value.toLowerCase()
+function handleFilterClick(event) {
+    const clickedFilter = event.target.textContent.trim().toLowerCase()
+    const filterType = event.target.dataset.filterType
 
-    ingredientFilterItems.forEach(item => {
+    activeFilters.push(clickedFilter)
+
+    createFilter(clickedFilter, filterType)
+    updateRecipesDisplay()
+
+    dispatchFilterCreation(filterType)
+}
+
+function dispatchFilterCreation(filterType) {
+    if (filterType === 'ingredient') {
+        createIngredientsList()
+    } else if (filterType === 'appliance') {
+        createAppliancesList()
+    } else if (filterType === 'utensil') {
+        createUtensilsList()
+    }
+}
+
+function handleFilterInput(searchInput, dropdownContainer) {
+    const searchTerm = searchInput.value.toLowerCase()
+    const filterItems = dropdownContainer.querySelectorAll('li')
+
+    filterItems.forEach(item => {
         const text = item.textContent.toLowerCase()
         item.style.display = text.startsWith(searchTerm) ? 'block' : 'none'
     })
 }
 
-// ------------Appliance Filter------------------ //
+function handleFiltersListCreation(listContainerSelector, dropdownContainer, data, filterType) {
+    const listContainer = document.querySelector(listContainerSelector)
+    const uniqueItems = [...new Set(data.filter(item => !activeFilters.includes(item.toLowerCase())))]
 
-function toggleAppliancesDropdown() {
-    isAppliancesOpen = !isAppliancesOpen
-    document.querySelector(".chevron_appliance").classList.toggle("rotate-180")
+    listContainer.innerHTML = uniqueItems.map(item => {
+        const capitalizedItem = item.charAt(0).toUpperCase() + item.slice(1)
+        return `<li data-filter-type="${filterType}" class="block cursor-pointer py-2 px-4 hover:bg-yellow text-sm">${capitalizedItem}</li>`
+    }).join("")
 
-    if (isAppliancesOpen) {
-        applianceDropdown.classList.remove('hidden')
-        applianceDropdown.classList.add('animate-expand')
-        applianceDropdown.classList.remove('animate-collapse')
-    } else {
-        applianceDropdown.classList.add('animate-collapse')
-        applianceDropdown.classList.remove('animate-expand')
-        setTimeout(() => {
-            applianceDropdown.classList.add('hidden')
-        }, 505)
-    }
+    const filterItems = dropdownContainer.querySelectorAll('li')
+    addListenersToFiltersList(filterItems)
+}
+
+function createIngredientsList() {
+    const ingredients = recipesData.flatMap(recette => recette.ingredients.map(ing => ing.ingredient.toLowerCase()))
+    handleFiltersListCreation('.ingredient_list', ingredientDropdown, ingredients, 'ingredient')
 }
 
 function createAppliancesList() {
-    const applianceList = document.querySelector('.appliance_list')
-    const appliances = recipesData.map(recette => recette.appliance).flat()
-
-    const uniqueAppliances = appliances.reduce((acc, appliance) => {
-        if (!acc.includes(appliance)) {
-            acc.push(appliance)
-        }
-        return acc
-    }, [])
-
-    applianceList.innerHTML = uniqueAppliances.map(appliance => `<li class="block cursor-pointer py-2 px-4 hover:bg-yellow text-sm">${appliance}</li>`).join("")
-    applianceFilterItems = applianceDropdown.querySelectorAll('li')
-    addAppliancesListeners()
-}
-
-function addAppliancesListeners() {
-    applianceFilterItems.forEach(item => {
-        item.addEventListener("click", () => {
-            const clickedAppliance = item.textContent.trim().toLowerCase()
-            activeFilters.push(clickedAppliance)
-
-            createFilter(clickedAppliance)
-            updateRecipesDisplay()
-            createAppliancesList()
-        })
-    })
-}
-
-function filterAppliancesWithInput() {
-    const searchTerm = applianceSearchInput.value.toLowerCase()
-    applianceFilterItems = applianceDropdown.querySelectorAll('li')
-
-    applianceFilterItems.forEach((item) => {
-        const text = item.textContent.toLowerCase()
-        if (text.startsWith(searchTerm)) {
-            item.style.display = 'block'
-        } else {
-            item.style.display = 'none'
-        }
-    })
-}
-
-// ------------Utensils Filter------------------ //
-
-function toggleUtensilsDropdown() {
-    isUtensilsOpen = !isUtensilsOpen
-    document.querySelector(".chevron_utensil").classList.toggle("rotate-180")
-
-    if (isUtensilsOpen) {
-        utensilDropdown.classList.remove('hidden')
-        utensilDropdown.classList.add('animate-expand')
-        utensilDropdown.classList.remove('animate-collapse')
-    } else {
-        utensilDropdown.classList.add('animate-collapse')
-        utensilDropdown.classList.remove('animate-expand')
-        setTimeout(() => {
-            utensilDropdown.classList.add('hidden')
-        }, 505)
-    }
+    const appliances = recipesData.flatMap(recette => recette.appliance)
+    handleFiltersListCreation('.appliance_list', applianceDropdown, appliances, 'appliance')
 }
 
 function createUtensilsList() {
-    const utensilList = document.querySelector('.utensil_list')
-    const utensils = recipesData.map(recette => recette.ustensils).flat()
-
-    const uniqueUtensils = utensils.reduce((acc, utensil) => {
-        // Filtrer les ustensiles pour ne garder que ceux qui contiennent des lettres, espaces et accents
-        const filteredUtensil = utensil.replace(/[^a-zA-ZÀ-ÿ\s]/g, '').toLowerCase()
-        if (filteredUtensil && !acc.includes(filteredUtensil)) {
-            acc.push(filteredUtensil)
-        }
-        return acc
-    }, [])
-
-    utensilList.innerHTML = uniqueUtensils.map(utensil => {
-        const capitalizedUtensil = utensil.charAt(0).toUpperCase() + utensil.slice(1)
-        return `<li class="block cursor-pointer py-2 px-4 hover:bg-yellow text-sm">${capitalizedUtensil}</li>`
-    }).join("")
-
-    utensilFilterItems = utensilDropdown.querySelectorAll('li')
-    addUtensilsListeners()
+    const utensils = recipesData.flatMap(recette => recette.ustensils.map(utensil => utensil.replace(/[^a-zA-ZÀ-ÿ\s]/g, '').toLowerCase()))
+    handleFiltersListCreation('.utensil_list', utensilDropdown, utensils, 'utensil')
 }
 
-function addUtensilsListeners() {
-    utensilFilterItems.forEach(item => {
-        item.addEventListener("click", () => {
-            const clickedUtensil = item.textContent.trim().toLowerCase()
-            activeFilters.push(clickedUtensil)
-
-            createFilter(clickedUtensil)
-            updateRecipesDisplay()
-            createAppliancesList()
-        })
-    })
-}
-
-function filterUtensilsWithInput() {
-    const searchTerm = utensilSearchInput.value.toLowerCase()
-
-    items.forEach((item) => {
-        const text = item.textContent.toLowerCase()
-        if (text.startsWith(searchTerm)) {
-            item.style.display = 'block'
-        } else {
-            item.style.display = 'none'
-        }
-    })
-}
-
-createFiltersList()
+createIngredientsList()
+createAppliancesList()
+createUtensilsList()
