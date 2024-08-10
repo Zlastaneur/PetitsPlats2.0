@@ -1,4 +1,4 @@
-export function createFilter(data) {
+export function createFilter(data, filterType) {
   const filter = data.charAt(0).toUpperCase() + data.slice(1)
 
   const filterTemplate = `
@@ -6,7 +6,8 @@ export function createFilter(data) {
           id="dropdownSearchButton"
           data-dropdown-toggle="dropdownSearch"
           data-dropdown-placement="bottom"
-          class="selected_filter_btn cursor-default line-clamp-1 max-h-[52px] inline-flex w-48 items-center m-1 justify-between rounded-lg bg-yellow py-4 pl-5 pr-3 text-center text-sm font-medium text-black focus:outline-none whitespace-nowrap"
+          data-filter-type="${filterType}"
+          class="selected_filter_btn cursor-pointer line-clamp-1 max-h-[52px] inline-flex w-48 items-center my-2 mr-2 justify-between rounded-lg bg-yellow py-4 pl-5 pr-3 text-center text-sm font-medium text-black focus:outline-none whitespace-nowrap"
           type="button"
           v
         >
