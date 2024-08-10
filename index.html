@@ -35,7 +35,7 @@
           class="relative mb-36 mt-8 w-full border-none text-grey focus:ring-0"
         >
           <input
-            class="w-full rounded-lg border-none p-6 pl-8 font-manrope focus:ring-0"
+            class="w-full rounded-lg border-none p-6 pl-8 font-manrope outline-none focus:ring-0"
             type="text"
             placeholder="Rechercher une recette, un ingrédient, ..."
           />
@@ -83,7 +83,7 @@
               >
                 Ingrédients
                 <svg
-                  class="ingredient_appliance ms-3 h-2.5 w-2.5"
+                  class="chevron_ingredient ms-3 h-2.5 w-2.5"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -105,50 +105,13 @@
                 <!-- Search input -->
                 <input
                   id="search-input_ingredient"
-                  class="ml-[16px] block w-[160px] self-center border border-gray-300 p-2 text-center text-sm text-gray-800 focus:outline-none"
+                  class="ml-[16px] block w-[160px] self-center border border-gray-300 p-2 text-sm text-grey focus:outline-none"
                   type="text"
                   autocomplete="off"
                 />
                 <!-- Dropdown content goes here -->
-                <ul
-                  class="ingredient_list max-h-60 overflow-y-scroll px-4"
-                ></ul>
+                <ul class="ingredient_list max-h-60 overflow-y-scroll"></ul>
               </div>
-              <!--<div
-                id="dropdownSearch"
-                class="z-10 hidden w-60 rounded-lg bg-white shadow dark:bg-gray-700"
-              >
-                <div class="p-3">
-                  <label for="input-group-search" class="sr-only"></label>
-                  <div class="relative">
-                    <div
-                      class="rtl:inset-r-0 pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3"
-                    >
-                      <svg
-                        class="h-4 w-4 text-gray-500 dark:text-gray-400"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                        />
-                      </svg>
-                    </div>
-                    <input
-                      type="text"
-                      id="input-group-search"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                      placeholder="Search user"
-                    />
-                  </div>
-                </div>
-              </div>-->
             </div>
             <!--second filter-->
             <div class="relative mr-14">
@@ -184,116 +147,73 @@
                 <!-- Search input -->
                 <input
                   id="search-input_appliance"
-                  class="ml-[16px] block w-[160px] self-center border border-gray-300 p-2 text-center text-sm text-gray-800 focus:outline-none"
+                  class="ml-[16px] block w-[160px] self-center border border-gray-300 p-2 text-sm text-grey focus:outline-none"
                   type="text"
                   autocomplete="off"
                 />
                 <!-- Dropdown content goes here -->
-                <ul class="appliance_list max-h-60 overflow-y-scroll px-4"></ul>
+                <ul class="appliance_list max-h-60 overflow-y-scroll"></ul>
               </div>
             </div>
             <!--third filter-->
+            <div class="relative mr-14">
+              <button
+                id="DropdownBtn_utensil"
+                data-dropdown-toggle="dropdownSearch"
+                data-dropdown-placement="bottom"
+                class="inline-flex w-48 items-center justify-between rounded-lg bg-white p-4 text-sm font-medium focus:outline-none"
+                type="button"
+                v
+              >
+                Ustensiles
+                <svg
+                  class="chevron_utensil ms-3 h-2.5 w-2.5"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+              <div
+                id="dropdownMenu_utensil"
+                class="absolute right-0 top-[2.8rem] hidden max-h-0 w-48 max-w-full space-y-1 overflow-hidden rounded-b-md bg-white py-2"
+              >
+                <!-- Search input -->
+                <input
+                  id="search-input_utensil"
+                  class="ml-[16px] block w-[160px] self-center border border-gray-300 p-2 text-sm text-grey focus:outline-none"
+                  type="text"
+                  autocomplete="off"
+                />
+                <!-- Dropdown content goes here -->
+                <ul class="utensil_list max-h-60 overflow-y-scroll"></ul>
+              </div>
+            </div>
           </div>
           <div
             class="flex w-1/4 content-between items-center justify-end text-end font-anton text-lg"
           >
-            <p class="recipe_count cursor-default">03 recettes</p>
+            <p class="recipe_count cursor-default">Recettes</p>
           </div>
         </div>
-        <div class="font-manrope">
-          <button
-            id="dropdownSearchButton"
-            data-dropdown-toggle="dropdownSearch"
-            data-dropdown-placement="bottom"
-            class="inline-flex w-48 items-center justify-between rounded-lg bg-yellow py-4 pl-5 pr-3 text-center text-sm font-medium text-black focus:outline-none"
-            type="button"
-            v
-          >
-            Crème de coco
-            <svg
-              fill="#000000"
-              width="20px"
-              height="20px"
-              viewBox="0 0 32 32"
-              xmlns="http://www.w3.org/2000/svg"
-              data-darkreader-inline-fill=""
-              style="--darkreader-inline-fill: #000000"
-            >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  d="M18.8,16l5.5-5.5c0.8-0.8,0.8-2,0-2.8l0,0C24,7.3,23.5,7,23,7c-0.5,0-1,0.2-1.4,0.6L16,13.2l-5.5-5.5 c-0.8-0.8-2.1-0.8-2.8,0C7.3,8,7,8.5,7,9.1s0.2,1,0.6,1.4l5.5,5.5l-5.5,5.5C7.3,21.9,7,22.4,7,23c0,0.5,0.2,1,0.6,1.4 C8,24.8,8.5,25,9,25c0.5,0,1-0.2,1.4-0.6l5.5-5.5l5.5,5.5c0.8,0.8,2.1,0.8,2.8,0c0.8-0.8,0.8-2.1,0-2.8L18.8,16z"
-                ></path>
-              </g>
-            </svg>
-          </button>
-        </div>
+        <div class="selected_filters font-manrope"></div>
       </section>
       <section
         class="cards_section grid grid-cols-3 justify-items-center gap-y-20 px-[300px] pb-36 pt-6"
-      >
-        <!--<article
-          class="box-border h-[700px] w-[380px] cursor-default rounded-xl bg-white"
-        >
-          <div class="relative h-[250px] cursor-default text-end">
-            <img
-              src="assets/recipes/${data.image}"
-              alt="Photo de ${data.name}"
-              class="h-full w-full rounded-t-xl object-cover"
-            />
-            <p
-              class="absolute right-6 top-6 w-20 rounded-xl bg-yellow py-[4px] text-center font-manrope text-sm font-normal"
-            >
-              ${data.time}min
-            </p>
-          </div>
-          <div class="box-border h-[450px] overflow-hidden p-6 pt-8">
-            <h2 class="max-h-[25px] font-anton">${data.name}</h2>
-            <div
-              class="max-h-[220px] overflow-hidden py-6 font-manrope text-sm"
-            >
-              <h3 class="mb-3 text-grey">Recette</h3>
-              <p class="line-clamp-4">${data.description}</p>
-            </div>
-            <div class="box-border font-manrope text-sm">
-              <h3 class="mb-[5px] w-full text-grey">Ingrédients</h3>
-              <div
-                class="flex h-[180px] w-full flex-col flex-wrap content-between"
-              >
-                <ul class="my-2 h-[40px] w-1/4">
-                  <li>Lait de coco</li>
-                  <li class="text-grey">400ml</li>
-                </ul>
-                <ul class="my-2 h-[40px] w-[45%]">
-                  <li>Crème de coco</li>
-                  <li class="text-grey">4 cuillères</li>
-                </ul>
-                <ul class="my-2 h-[40px] w-[45%]">
-                  <li>Glaçons</li>
-                  <li class="text-grey">2</li>
-                </ul>
-                <ul class="my-2 h-[40px] w-[45%]">
-                  <li>Jus de citron</li>
-                  <li class="text-grey">2</li>
-                </ul>
-                <ul class="my-2 h-[40px] w-[45%]">
-                  <li>Sucre</li>
-                  <li class="text-grey">20g</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </article>-->
-      </section>
+      ></section>
     </main>
     <script type="module" src="src/js/data/recipes.js"></script>
     <script type="module" src="src/js/pages/index.js"></script>
     <script type="module" src="src/js/utils/filters.js"></script>
     <script type="module" src="src/js/templates/card.js"></script>
+    <script type="module" src="src/js/templates/filter.js"></script>
   </body>
 </html>

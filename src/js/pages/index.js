@@ -3,7 +3,7 @@ import { createCard } from "../templates/card.js"
 
 const recipeCount = document.querySelector('.recipe_count ')
 
-const index = () => {
+export const displayRecipes = () => {
   try {
     recipesData.forEach((recipe) => {
       createCard(recipe)
@@ -15,4 +15,4 @@ const index = () => {
 
 recipeCount.innerHTML = `${recipesData.length} Recettes`
 
-index()
+displayRecipes()
