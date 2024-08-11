@@ -145,8 +145,6 @@ function handleFiltersListCreation(listContainerSelector, dropdownContainer, dat
 
     const filterItems = dropdownContainer.querySelectorAll('li')
     addListenersToFiltersList(filterItems)
-    console.log("dzzdqzqd")
-
 }
 
 function createIngredientsList() {
