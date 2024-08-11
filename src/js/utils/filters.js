@@ -1,6 +1,6 @@
 import { recipesData } from "../data/recipes.js"
 import { createCard } from "../templates/card.js"
-import { createFilter } from "../templates/filter.js"
+import { createActiveFilter } from "../templates/filter.js"
 
 // ------------ Variables and selectors ------------------ //
 const ingredientBtn = document.getElementById('DropdownBtn_ingredient')
@@ -21,6 +21,7 @@ let isIngredientsOpen = false
 let isAppliancesOpen = false
 let isUtensilsOpen = false
 let activeFilters = []
+let filteredRecipes = []
 
 // ------------ Event listeners ------------------ //
 ingredientBtn.addEventListener('click', () => {
@@ -46,13 +47,15 @@ function updateRecipesDisplay() {
     const container = document.querySelector(".cards_section")
     container.innerHTML = ""
 
-    const filteredRecipes = recipesData.filter(recipe =>
+
+    filteredRecipes = recipesData.filter(recipe =>
         activeFilters.every(filter =>
             recipe.ingredients.some(item => item.ingredient.toLowerCase() === filter)
             || recipe.appliance.toLowerCase() === filter
             || recipe.ustensils.some(ustensils => ustensils.toLowerCase() === filter)
         )
     )
+    console.log(filteredRecipes)
 
     filteredRecipes.forEach(createCard)
     updateRecipeCount(filteredRecipes)
@@ -73,7 +76,7 @@ function deleteSelectedFilter(event) {
         button.remove()
 
         updateRecipesDisplay()
-        dispatchFilterCreation(filterType)
+        dispatchFilterCreation()
     }
 }
 
@@ -109,9 +112,9 @@ function handleFilterClick(event) {
     activeFilters.push(clickedFilter)
 
     cleanSearchInput(filterType)
-    createFilter(clickedFilter, filterType)
+    createActiveFilter(clickedFilter, filterType)
     updateRecipesDisplay()
-    dispatchFilterCreation(filterType)
+    dispatchFilterCreation(filteredRecipes)
 }
 
 function cleanSearchInput(filterType) {
@@ -121,14 +124,10 @@ function cleanSearchInput(filterType) {
     }
 }
 
-function dispatchFilterCreation(filterType) {
-    if (filterType === 'ingredient') {
-        createIngredientsList()
-    } else if (filterType === 'appliance') {
-        createAppliancesList()
-    } else if (filterType === 'utensil') {
-        createUtensilsList()
-    }
+function dispatchFilterCreation() {
+    createIngredientsList()
+    createAppliancesList()
+    createUtensilsList()
 }
 
 function handleFilterInput(searchInput, dropdownContainer) {
@@ -142,8 +141,29 @@ function handleFilterInput(searchInput, dropdownContainer) {
 }
 
 function handleFiltersListCreation(listContainerSelector, dropdownContainer, data, filterType) {
+
     const listContainer = document.querySelector(listContainerSelector)
-    const uniqueItems = [...new Set(data.filter(item => !activeFilters.includes(item.toLowerCase())))]
+    let uniqueItems = []
+
+    if (Array.isArray(filteredRecipes) && filteredRecipes.length > 0) {
+        const recipesMatchingData = data.filter(ingredient =>
+            filteredRecipes.some(recipe =>
+                recipe.ingredients.some(ing => ing.ingredient.toLowerCase() === ingredient)
+            )
+        )
+
+        uniqueItems = [...new Set(recipesMatchingData.filter(item =>
+            !activeFilters.includes(item.toLowerCase())
+
+        ))]
+        console.log(filteredRecipes)
+        console.log(recipesMatchingData)
+    } else {
+        uniqueItems = [...new Set(data.filter(item =>
+            !activeFilters.includes(item.toLowerCase())
+        ))]
+        console.log(filteredRecipes)
+    }
 
     listContainer.innerHTML = uniqueItems.map(item => {
         const capitalizedItem = item.charAt(0).toUpperCase() + item.slice(1)
@@ -169,6 +189,4 @@ function createUtensilsList() {
     handleFiltersListCreation('.utensil_list', utensilDropdown, utensils, 'utensil')
 }
 
-createIngredientsList()
-createAppliancesList()
-createUtensilsList()
+dispatchFilterCreation()

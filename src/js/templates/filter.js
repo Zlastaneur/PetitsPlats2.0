@@ -1,4 +1,4 @@
-export function createFilter(data, filterType) {
+export function createActiveFilter(data, filterType) {
   const filter = data.charAt(0).toUpperCase() + data.slice(1)
 
   const filterTemplate = `
