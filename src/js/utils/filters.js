@@ -108,10 +108,17 @@ function handleFilterClick(event) {
 
     activeFilters.push(clickedFilter)
 
+    cleanSearchInput(filterType)
     createFilter(clickedFilter, filterType)
     updateRecipesDisplay()
-
     dispatchFilterCreation(filterType)
+}
+
+function cleanSearchInput(filterType) {
+    const inputElement = document.querySelector(`input[data-filter-type="${filterType}"]`)
+    if (inputElement) {
+        inputElement.value = ''
+    }
 }
 
 function dispatchFilterCreation(filterType) {
@@ -145,8 +152,6 @@ function handleFiltersListCreation(listContainerSelector, dropdownContainer, dat
 
     const filterItems = dropdownContainer.querySelectorAll('li')
     addListenersToFiltersList(filterItems)
-    console.log("dzzdqzqd")
-
 }
 
 function createIngredientsList() {
