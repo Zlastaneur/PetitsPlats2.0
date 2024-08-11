@@ -7,7 +7,7 @@ export function createActiveFilter(data, filterType) {
           data-dropdown-toggle="dropdownSearch"
           data-dropdown-placement="bottom"
           data-filter-type="${filterType}"
-          class="selected_filter_btn cursor-pointer line-clamp-1 max-h-[52px] inline-flex w-48 items-center my-2 mr-2 justify-between rounded-lg bg-yellow py-4 pl-5 pr-3 text-center text-sm font-medium text-black focus:outline-none whitespace-nowrap"
+          class="selected_filter_btn cursor-pointer line-clamp-1 max-h-[52px] inline-flex w-52 items-center my-2 mr-2 justify-between rounded-lg bg-yellow py-4 pl-5 pr-3 text-center text-sm font-medium text-black focus:outline-none whitespace-nowrap"
           type="button"
           v
         >
@@ -38,7 +38,7 @@ export function createActiveFilter(data, filterType) {
       `
 
   const container = document.querySelector(".selected_filters")
-  container.insertAdjacentHTML("afterbegin", filterTemplate)
+  container.insertAdjacentHTML("beforeend", filterTemplate)
 }
 
 

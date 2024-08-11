@@ -1,8 +1,6 @@
 import { recipesData } from "../data/recipes.js"
 import { createCard } from "../templates/card.js"
 
-const recipeCount = document.querySelector('.recipe_count ')
-
 export const displayRecipes = () => {
   try {
     recipesData.forEach((recipe) => {
@@ -13,6 +11,12 @@ export const displayRecipes = () => {
   }
 }
 
-recipeCount.innerHTML = `${recipesData.length} Recettes`
+export function updateRecipeCount(recipesList) {
+  const countContainer = document.querySelector(".recipe_count")
+
+  countContainer.innerHTML = ""
+  countContainer.innerHTML = `${recipesList.length} Recettes`
+}
 
 displayRecipes()
+updateRecipeCount(recipesData)
