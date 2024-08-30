@@ -18,6 +18,8 @@ const utensilSearchInput = document.getElementById('search-input_utensil')
 
 const filtersContainer = document.querySelector('.selected_filters')
 
+const searchbarInput = document.getElementById('searchbar')
+
 let isIngredientsOpen = false
 let isAppliancesOpen = false
 let isUtensilsOpen = false
@@ -41,7 +43,13 @@ utensilSearchInput.addEventListener('input', () => handleFilterInput(utensilSear
 
 filtersContainer.addEventListener('click', deleteSelectedFilter)
 
+searchbarInput.addEventListener('input', () => handleSearchbarInput())
+
 // ------------ Functions ------------------ //
+function normalizeText(text) {
+    return text.toLowerCase().normalize("NFKD").replace(/\p{Diacritic}/gu, "")
+}
+
 function toggleDropdownButton(isOpen, dropdownElement, chevronElement) {
     isOpen = !isOpen
     chevronElement.classList.toggle("rotate-180")
@@ -84,44 +92,42 @@ function createUtensilsList() {
 
 function handleFiltersListCreation(listContainerSelector, dropdownContainer, data, filterType) {
     const listContainer = document.querySelector(listContainerSelector)
+    const recipesToUse = filteredRecipes.length > 0 ? filteredRecipes : recipesData
     let uniqueItems = []
+    let recipesMatchingData = []
 
-    // If there is an active filter
-    if (Array.isArray(filteredRecipes) && filteredRecipes.length > 0) {
-        let recipesMatchingData = []
 
-        // Filter data based on the filter type (ingredients, appliance, or utensils)
-        if (filterType === 'ingredients') {
+    switch (filterType) {
+        case 'ingredients':
             recipesMatchingData = data.filter(ingredient =>
-                filteredRecipes.some(recipe =>
+                recipesToUse.some(recipe =>
                     recipe.ingredients.some(ing => ing.ingredient.toLowerCase() === ingredient)
                 )
             )
-        } else if (filterType === 'appliance') {
+            break
+        case 'appliance':
             recipesMatchingData = data.filter(appliance =>
-                filteredRecipes.some(recipe =>
+                recipesToUse.some(recipe =>
                     recipe.appliance.toLowerCase() === appliance
                 )
             )
-        } else if (filterType === 'ustensils') {
+            break
+
+        case 'ustensils':
             recipesMatchingData = data.filter(utensil =>
-                filteredRecipes.some(recipe =>
+                recipesToUse.some(recipe =>
                     recipe.ustensils.some(ustensil => ustensil.toLowerCase() === utensil)
                 )
             )
-        }
-
-        // Get unique items that are not in the active filters
-        uniqueItems = [...new Set(recipesMatchingData.filter(item =>
-            !activeFilters.includes(item.toLowerCase())
-
-        ))]
-    } else {
-        // Get unique items that are not in the active filters
-        uniqueItems = [...new Set(data.filter(item =>
-            !activeFilters.includes(item.toLowerCase())
-        ))]
+            break
+        default: return
     }
+
+    // Get unique items that are not in the active filters
+    uniqueItems = [...new Set(recipesMatchingData.filter(item =>
+        !activeFilters.includes(item.toLowerCase())
+
+    ))]
 
     // Create the list items for the filter dropdown
     listContainer.innerHTML = uniqueItems.map(item => {
@@ -140,13 +146,13 @@ function addListenersToFiltersList(filterList) {
 }
 
 function handleFilterInput(searchInput, dropdownContainer) {
-    const searchTerm = searchInput.value.toLowerCase()
+    const searchTerm = normalizeText(searchInput.value)
     const filterItems = dropdownContainer.querySelectorAll('li')
 
     // Show or hide filter items based on the search term
     filterItems.forEach(item => {
-        const text = item.textContent.toLowerCase()
-        item.style.display = text.startsWith(searchTerm) ? 'block' : 'none'
+        const text = normalizeText(item.textContent)
+        item.style.display = text.includes(searchTerm) ? 'block' : 'none'
     })
 }
 
@@ -157,6 +163,7 @@ function handleFilterClick(event) {
     activeFilters.push(clickedFilter)
 
     cleanSearchInput(filterType)
+    //cleanSearchbarInput()
     createActiveFilter(clickedFilter, filterType)
     updateRecipesDisplay()
     createAllFiltersList()
@@ -168,6 +175,10 @@ function cleanSearchInput(filterType) {
         inputElement.value = ''
     }
 }
+
+/*function cleanSearchbarInput() {
+    searchbarInput.value = ''
+}*/
 
 function deleteSelectedFilter(event) {
     if (event.target.classList.contains('close_btn') || event.target.classList.contains('selected_filter_btn')) {
@@ -182,21 +193,94 @@ function deleteSelectedFilter(event) {
     }
 }
 
-function updateRecipesDisplay() {
+function updateRecipesDisplay(data) {
     const container = document.querySelector(".cards_section")
     container.innerHTML = ""
 
-    // Filter recipes based on active filters
-    filteredRecipes = recipesData.filter(recipe =>
-        activeFilters.every(filter =>
-            recipe.ingredients.some(item => item.ingredient.toLowerCase() === filter)
-            || recipe.appliance.toLowerCase() === filter
-            || recipe.ustensils.some(ustensils => ustensils.toLowerCase() === filter)
-        )
-    )
 
-    filteredRecipes.forEach(createCard)
-    updateRecipeCount(filteredRecipes)
+    if (Array.isArray(data) && data.length > 0) {
+        data.forEach(createCard)
+        updateRecipeCount(data)
+    } else {
+        const RecipesToUse = filteredRecipes.length > 0 ? filteredRecipes : recipesData
+        // Filter recipes based on active filters
+        filteredRecipes = RecipesToUse.filter(recipe =>
+            activeFilters.every(filter =>
+                recipe.ingredients.some(item => item.ingredient.toLowerCase() === filter)
+                || recipe.appliance.toLowerCase() === filter
+                || recipe.ustensils.some(ustensils => ustensils.toLowerCase() === filter)
+            )
+        )
+        console.log(searchbarInput.value.length)
+
+        if (searchbarInput.value.length > 0) {
+            handleSearchbarInput()
+        } else {
+            filteredRecipes.forEach(createCard)
+            updateRecipeCount(filteredRecipes)
+        }
+    }
 }
 
+function handleSearchbarInput() {
+    const searchTerm = normalizeText(searchbarInput.value)
+    const isSearchTermLongEnough = searchTerm.length >= 3
+    const RecipesToUse = activeFilters.length > 0 ? filteredRecipes : recipesData
+    let searchedRecipes = []
+
+    if (isSearchTermLongEnough) {
+        searchedRecipes = RecipesToUse.filter(recipe => {
+            return normalizeText(recipe.name).includes(searchTerm) ||
+                normalizeText(recipe.description).includes(searchTerm) ||
+                recipe.ingredients.some(ing => normalizeText(ing.ingredient).includes(searchTerm)) ||
+                normalizeText(recipe.appliance).includes(searchTerm) ||
+                recipe.ustensils.some(utensils => normalizeText(utensils).includes(searchTerm))
+        })
+
+        if (searchedRecipes.length === 0) {
+            displayNoResultsMessage(searchTerm)
+            updateRecipeCount(searchedRecipes)
+        } else {
+            filteredRecipes = searchedRecipes
+            updateRecipesDisplay(searchedRecipes)
+        }
+
+    } else {
+        updateRecipesDisplay(RecipesToUse)
+    }
+    createAllFiltersList()
+}
+
+function displayNoResultsMessage(searchTerm) {
+    const recipesContainer = document.querySelector(".cards_section")
+    recipesContainer.innerHTML = `<p class="text-center">Aucune recette ne contient "${searchTerm}", vous pouvez chercher "tarte aux pommes", "poisson", etc.</p>`
+}
+
+/*
+function handleSearchbarInput() {
+    const searchTerm = normalizeText(searchbarInput.value)
+    if (searchTerm.length >= 3) {
+        filteredRecipes = recipesData.filter(recipe => {
+            return normalizeText(recipe.name).includes(searchTerm) ||
+                normalizeText(recipe.description).includes(searchTerm) ||
+                recipe.ingredients.some(ing => normalizeText(ing.ingredient).includes(searchTerm)) ||
+                normalizeText(recipe.appliance).includes(searchTerm) ||
+                recipe.ustensils.some(utensils => normalizeText(utensils).includes(searchTerm))
+        })
+
+        updateRecipesDisplay(filteredRecipes)
+        createAllFiltersList()
+    } else if (recipesData !== filteredRecipes && searchTerm.length < 3 && activeFilters.length === 0) {
+        filteredRecipes = recipesData
+        updateRecipesDisplay(recipesData)
+        createAllFiltersList()
+    } else if (recipesData !== filteredRecipes && searchTerm.length < 3 && activeFilters.length >= 1) {
+        updateRecipesDisplay(filteredRecipes)
+        createAllFiltersList()
+    }
+
+    function normalizeText(text) {
+        return text.toLowerCase().normalize("NFKD").replace(/\p{Diacritic}/gu, "")
+    }
+}*/
 createAllFiltersList()
