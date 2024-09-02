@@ -6,9 +6,7 @@ import { updateRecipeCount } from "../pages/index.js"
 // ------------ Variables and selectors ------------------ //
 const ingredientBtn = document.getElementById("DropdownBtn_ingredient")
 const ingredientDropdown = document.getElementById("dropdownMenu_ingredient")
-const ingredientSearchInput = document.getElementById(
-    "search-input_ingredient",
-)
+const ingredientSearchInput = document.getElementById("search-input_ingredient")
 
 const applianceBtn = document.getElementById("DropdownBtn_appliance")
 const applianceDropdown = document.getElementById("dropdownMenu_appliance")
@@ -19,12 +17,12 @@ const utensilDropdown = document.getElementById("dropdownMenu_utensil")
 const utensilSearchInput = document.getElementById("search-input_utensil")
 
 const filtersContainer = document.querySelector(".selected_filters")
-
 const searchbarInput = document.getElementById("searchbar")
 
 let isIngredientsOpen = false
 let isAppliancesOpen = false
 let isUtensilsOpen = false
+
 let activeFilters = []
 let filteredRecipes = []
 let searchedRecipes = []
@@ -68,6 +66,8 @@ filtersContainer.addEventListener("click", deleteSelectedFilter)
 searchbarInput.addEventListener("input", () => handleSearchbarInput())
 
 // ------------ Functions ------------------ //
+
+// Normalize text for comparison
 function normalizeText(text) {
     return text.toLowerCase().normalize("NFKD").replace(/\p{Diacritic}/gu, "")
 }
@@ -142,20 +142,10 @@ function handleFiltersListCreation(
     filterType,
 ) {
     const listContainer = document.querySelector(listContainerSelector)
-    //const recipesToUse = filteredRecipes.length > 0 ? filteredRecipes : recipesData
     let uniqueItems = []
     let recipesMatchingData = []
-    /*
-        let recipesToUse
-    
-        if (searchedRecipes.length > 0 && searchbarInput.value.length > 2) {
-            recipesToUse = searchedRecipes
-        } else if (searchedRecipes.length <= 0 && filteredRecipes.length > 0) {
-            recipesToUse = filteredRecipes
-        } else {
-            recipesToUse = recipesData
-        }*/
 
+    // Get the data for the specific filter type
     switch (filterType) {
         case "ingredients":
             recipesMatchingData = data.filter((ingredient) =>
@@ -235,11 +225,8 @@ function handleFilterClick(event) {
 
     cleanSearchInput(filterType)
     createActiveFilter(clickedFilter, filterType)
-    //filterRecipes(displayedRecipes, activeFilters)
-    updateRecipesDisplay(filteredRecipes)
+    updateRecipesDisplay()
     createAllFiltersList()
-    //console.log(filteredRecipes)
-    //handleSearchbarInput()
 }
 
 function cleanSearchInput(filterType) {
@@ -251,10 +238,6 @@ function cleanSearchInput(filterType) {
     }
 }
 
-/*function cleanSearchbarInput() {
-    searchbarInput.value = ''
-}*/
-
 function deleteSelectedFilter(event) {
     if (
         event.target.classList.contains("close_btn") ||
@@ -265,49 +248,9 @@ function deleteSelectedFilter(event) {
         // Remove the filter from active filters
         activeFilters = activeFilters.filter((element) => element !== filter)
         button.remove()
-
-        updateRecipesDisplay()
-        createAllFiltersList()
-        //handleSearchbarInput()
+        handleSearchbarInput()
     }
 }
-/*
-function updateRecipesDisplay(data) {
-    const container = document.querySelector(".cards_section")
-    container.innerHTML = ""
-
-    if (Array.isArray(data) && data.length > 0) {
-        data.forEach(createCard)
-        updateRecipeCount(data)
-    } else {
-        // const recipesToUse = activeFilters.length > 0 && filteredRecipes.length > 0 ? filteredRecipes : recipesData
-
-        let recipesToUse
-        if (searchedRecipes.length > 0 && searchbarInput.value.length > 2) {
-            recipesToUse = searchedRecipes
-        } else if (searchedRecipes.length < 1 && filteredRecipes > 0) {
-            recipesToUse = filteredRecipes
-        } else {
-            recipesToUse = recipesData
-        }
-
-        // Filter recipes based on active filters
-        filteredRecipes = recipesToUse.filter((recipe) =>
-            activeFilters.every(
-                (filter) =>
-                    recipe.ingredients.some(
-                        (item) => item.ingredient.toLowerCase() === filter,
-                    ) ||
-                    recipe.appliance.toLowerCase() === filter ||
-                    recipe.ustensils.some(
-                        (ustensils) => ustensils.toLowerCase() === filter,
-                    ),
-            ),
-        )
-        filteredRecipes.forEach(createCard)
-        updateRecipeCount(filteredRecipes)
-    }
-}*/
 
 function filterRecipes(recipes, filters) {
     filteredRecipes = recipes.filter((recipe) =>
@@ -356,10 +299,6 @@ function updateRecipesDisplay(data) {
             displayedRecipes = recipesToUse
         }
 
-
-
-
-        //if (searchedRecipes.length > 0) searchedRecipes = filteredRecipes
     }
 }
 
@@ -367,20 +306,8 @@ function handleSearchbarInput() {
     const searchTerm = normalizeText(searchbarInput.value)
     const isSearchTermLongEnough = searchTerm.length >= 3
     let recipesToUse = activeFilters.length > 0 ? filteredRecipes : recipesData
-    /*f (searchedRecipes.length > 0) {
-        recipesToUse = searchedRecipes
-    }
-    else if (activeFilters.length > 0) {
-        recipesToUse = filteredRecipes
-    } else {
-        recipesToUse = recipesData
-    }*/
-
-    //console.log(filteredRecipes)
-    //console.log("handleSearchbarInput called with searchTerm:", searchTerm)
 
     if (isSearchTermLongEnough) {
-
         searchedRecipes = recipesToUse.filter((recipe) => {
             return (
                 normalizeText(recipe.name).includes(searchTerm) ||
@@ -398,20 +325,17 @@ function handleSearchbarInput() {
             displayNoResultsMessage(searchTerm)
             updateRecipeCount(searchedRecipes)
         }
-    } else if (searchTerm.length === 2) {
+    } else {
         updateRecipesDisplay()
         searchedRecipes = []
         displayedRecipes = activeFilters.length > 0 ? filteredRecipes : recipesData
-        console.log(displayedRecipes)
     }
     createAllFiltersList()
-    //console.log(searchedRecipes)
-
 }
 
 function displayNoResultsMessage(searchTerm) {
     const recipesContainer = document.querySelector(".cards_section")
-    recipesContainer.innerHTML = `<p class="text-center">Aucune recette ne contient "${searchTerm}", vous pouvez chercher "tarte aux pommes", "poisson", etc.</p>`
+    recipesContainer.innerHTML = `<p class="text-center col-start-2 my-[80px]">Aucune recette ne contient "${searchTerm}", vous pouvez chercher "tarte aux pommes", "poisson", etc.</p>`
 }
 
 createAllFiltersList()
