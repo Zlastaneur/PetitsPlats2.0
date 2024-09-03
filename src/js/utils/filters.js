@@ -166,11 +166,12 @@ function handleFilterClick(event) {
     const filterType = event.target.dataset.filterType
 
     activeFilters.push(clickedFilter)
-
+    console.log("avant : ", filteredRecipes, searchedRecipes, displayedRecipes)
     cleanSearchInput(filterType)
     createActiveFilter(clickedFilter, filterType)
     updateRecipesDisplay()
     createAllFiltersList()
+    console.log("après : ", filteredRecipes, searchedRecipes, displayedRecipes)
 }
 
 function cleanSearchInput(filterType) {
@@ -188,18 +189,23 @@ function deleteSelectedFilter(event) {
         // Remove the filter from active filters
         activeFilters = activeFilters.filter((element) => element !== filter)
         button.remove()
+        filterRecipes(recipesData, activeFilters)
         handleSearchbarInput()
     }
 }
 
 function filterRecipes(recipes, filters) {
-    filteredRecipes = recipes.filter((recipe) =>
-        filters.every((filter) =>
-            recipe.ingredients.some((item) => item.ingredient.toLowerCase() === filter) ||
-            recipe.appliance.toLowerCase() === filter ||
-            recipe.ustensils.some((ustensil) => ustensil.toLowerCase() === filter)
+    if (filters.length > 0) {
+        filteredRecipes = recipes.filter((recipe) =>
+            filters.every((filter) =>
+                recipe.ingredients.some((item) => item.ingredient.toLowerCase() === filter) ||
+                recipe.appliance.toLowerCase() === filter ||
+                recipe.ustensils.some((ustensil) => ustensil.toLowerCase() === filter)
+            )
         )
-    )
+    } else {
+        filteredRecipes = []
+    }
 }
 
 function getRecipesToUse() {
