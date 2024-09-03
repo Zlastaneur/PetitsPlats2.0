@@ -146,6 +146,7 @@ function handleFiltersListCreation(
     let recipesMatchingData = []
 
     // Get the data for the specific filter type
+
     switch (filterType) {
         case "ingredients":
             recipesMatchingData = data.filter((ingredient) =>
@@ -249,6 +250,7 @@ function deleteSelectedFilter(event) {
         activeFilters = activeFilters.filter((element) => element !== filter)
         button.remove()
         handleSearchbarInput()
+        handleSearchbarInput()
     }
 }
 
@@ -326,6 +328,7 @@ function handleSearchbarInput() {
             updateRecipeCount(searchedRecipes)
         }
     } else {
+    } else {
         updateRecipesDisplay()
         searchedRecipes = []
         displayedRecipes = activeFilters.length > 0 ? filteredRecipes : recipesData
@@ -335,6 +338,7 @@ function handleSearchbarInput() {
 
 function displayNoResultsMessage(searchTerm) {
     const recipesContainer = document.querySelector(".cards_section")
+    recipesContainer.innerHTML = `<p class="text-center col-start-2 my-[80px]">Aucune recette ne contient "${searchTerm}", vous pouvez chercher "tarte aux pommes", "poisson", etc.</p>`
     recipesContainer.innerHTML = `<p class="text-center col-start-2 my-[80px]">Aucune recette ne contient "${searchTerm}", vous pouvez chercher "tarte aux pommes", "poisson", etc.</p>`
 }
 
