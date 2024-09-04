@@ -149,7 +149,7 @@ function addListenersToFiltersList(filterList) {
         item.addEventListener("click", handleFilterClick)
     })
 }
-
+// // Handle filter list input search
 function handleFilterInput(searchInput, dropdownContainer) {
     const searchTerm = normalizeText(searchInput.value)
     const filterItems = dropdownContainer.querySelectorAll("li")
@@ -166,12 +166,10 @@ function handleFilterClick(event) {
     const filterType = event.target.dataset.filterType
 
     activeFilters.push(clickedFilter)
-    console.log("avant : ", filteredRecipes, searchedRecipes, displayedRecipes)
     cleanSearchInput(filterType)
     createActiveFilter(clickedFilter, filterType)
     updateRecipesDisplay()
     createAllFiltersList()
-    console.log("après : ", filteredRecipes, searchedRecipes, displayedRecipes)
 }
 
 function cleanSearchInput(filterType) {
@@ -189,11 +187,12 @@ function deleteSelectedFilter(event) {
         // Remove the filter from active filters
         activeFilters = activeFilters.filter((element) => element !== filter)
         button.remove()
-        filterRecipes(recipesData, activeFilters)
+        filterRecipes(recipesData, activeFilters) // Update the array of filteredRecipes
         handleSearchbarInput()
     }
 }
 
+// Filter recipes based on active filters
 function filterRecipes(recipes, filters) {
     if (filters.length > 0) {
         filteredRecipes = recipes.filter((recipe) =>
@@ -208,6 +207,7 @@ function filterRecipes(recipes, filters) {
     }
 }
 
+// Get the right recipes array based on search and filters
 function getRecipesToUse() {
     if (searchedRecipes.length > 0 && searchbarInput.value.length > 2) {
         return searchedRecipes
@@ -242,6 +242,7 @@ function updateRecipesDisplay(data) {
     }
 }
 
+// Handle input in the main search bar
 function handleSearchbarInput() {
     const searchTerm = normalizeText(searchbarInput.value)
     const isSearchTermLongEnough = searchTerm.length >= 3
@@ -260,7 +261,6 @@ function handleSearchbarInput() {
 
         if (searchedRecipes.length > 0) {
             updateRecipesDisplay(searchedRecipes)
-            console.log(displayedRecipes)
         } else {
             displayNoResultsMessage(searchTerm)
             updateRecipeCount(searchedRecipes)
