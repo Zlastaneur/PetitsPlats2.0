@@ -248,15 +248,21 @@ function handleSearchbarInput() {
     let recipesToUse = activeFilters.length > 0 ? filteredRecipes : recipesData
 
     if (isSearchTermLongEnough) {
-        searchedRecipes = recipesToUse.filter((recipe) => {
-            return (
+        searchedRecipes = []
+
+        for (let i = 0; i < recipesToUse.length; i++) {
+            const recipe = recipesToUse[i]
+
+            if (
                 normalizeText(recipe.name).includes(searchTerm) ||
                 normalizeText(recipe.description).includes(searchTerm) ||
                 recipe.ingredients.some((ing) => normalizeText(ing.ingredient).includes(searchTerm)) ||
                 normalizeText(recipe.appliance).includes(searchTerm) ||
-                recipe.ustensils.some((utensils) => normalizeText(utensils).includes(searchTerm))
-            )
-        })
+                recipe.ustensils.some((utensil) => normalizeText(utensil).includes(searchTerm))
+            ) {
+                searchedRecipes.push(recipe)
+            }
+        }
 
         if (searchedRecipes.length > 0) {
             updateRecipesDisplay(searchedRecipes)
@@ -268,7 +274,6 @@ function handleSearchbarInput() {
     } else {
         updateRecipesDisplay()
         searchedRecipes = []
-        displayedRecipes = activeFilters.length > 0 ? filteredRecipes : recipesData
     }
     createAllFiltersList()
 }
