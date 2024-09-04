@@ -268,7 +268,6 @@ function handleSearchbarInput() {
     } else {
         updateRecipesDisplay()
         searchedRecipes = []
-        displayedRecipes = activeFilters.length > 0 ? filteredRecipes : recipesData
     }
     createAllFiltersList()
 }
