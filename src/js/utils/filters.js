@@ -51,7 +51,24 @@ searchbarInput.addEventListener("input", () => handleSearchbarInput())
 
 // Normalize text for comparison
 function normalizeText(text) {
-    return text.toLowerCase().normalize("NFKD").replace(/\p{Diacritic}/gu, "")
+    const accentMap = {
+        'a': /[àáâãäå]/g,
+        'c': /[ç]/g,
+        'e': /[èéêë]/g,
+        'i': /[ìíîï]/g,
+        'n': /[ñ]/g,
+        'o': /[òóôõö]/g,
+        'u': /[ùúûü]/g,
+        'y': /[ýÿ]/g
+    }
+
+    text = text.toLowerCase()
+
+    for (let letter in accentMap) {
+        text = text.replace(accentMap[letter], letter)
+    }
+
+    return text
 }
 
 function toggleDropdownButton(isOpen, dropdownElement, chevronElement) {
@@ -256,13 +273,17 @@ function handleSearchbarInput() {
             const recipe = recipesToUse[i]
 
             if (
-                normalizeText(recipe.name).includes(searchTerm) ||
-                normalizeText(recipe.description).includes(searchTerm) ||
-                recipe.ingredients.some((ing) => normalizeText(ing.ingredient).includes(searchTerm)) ||
-                normalizeText(recipe.appliance).includes(searchTerm) ||
-                recipe.ustensils.some((utensil) => normalizeText(utensil).includes(searchTerm))
+                normalizeText(recipe.name).indexOf(searchTerm) > -1 ||
+                normalizeText(recipe.description).indexOf(searchTerm) > -1
             ) {
                 searchedRecipes.push(recipe)
+            } else {
+                for (let index = 0; index < recipe.ingredients.length; index++) {
+                    if (recipe.ingredients[index].ingredient.indexOf(searchTerm) > -1) {
+                        searchedRecipes.push(recipe)
+                        break
+                    }
+                }
             }
         }
 
@@ -278,6 +299,8 @@ function handleSearchbarInput() {
     }
     createAllFiltersList()
 }
+
+
 
 function displayNoResultsMessage(searchTerm) {
     const recipesContainer = document.querySelector(".cards_section")
